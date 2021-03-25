@@ -9,17 +9,16 @@ object demo0 {
   import cats.implicits._
   import fs2.Pull
   import fs2.Stream
-  import org.http4s.Response
 
-  def onEmptyOrNonEmpty[F[_]: MonadThrow, A](
+  def onEmptyOrNonEmpty[F[_]: MonadThrow, A, B](
     stream: Stream[F, A]
   )(
-    onNonEmpty: Stream[F, A] => F[Response[F]]
+    onNonEmpty: Stream[F, A] => F[B]
   )(
-    onEmpty: F[Response[F]]
+    onEmpty: F[B]
   )(
     implicit SC: fs2.Compiler[F, F]
-  ): F[Response[F]] = stream
+  ): F[B] = stream
     .pull
     .peek1
     .flatMap {
